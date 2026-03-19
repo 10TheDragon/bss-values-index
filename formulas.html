@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BSS Values Tool — Formulas & Calculations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0f;
+  --surface: #111118;
+  --surface2: #181820;
+  --border: #1e2030;
+  --text: #e8eaf0;
+  --muted: #7a8aaa;
+  --gold: #f5c842;
+  --green: #3ddc84;
+  --blue: #4B9FFF;
+  --purple: #C84BFF;
+  --orange: #FF6B35;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Rajdhani', sans-serif;
+  min-height: 100vh;
+  padding: 40px 20px 80px;
+  line-height: 1.6;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 10%, rgba(255,215,0,.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 90%, rgba(75,159,255,.04) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+.container { max-width: 860px; margin: 0 auto; position: relative; z-index: 1; }
+
+/* HEADER */
+.page-header { text-align: center; margin-bottom: 48px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+.page-header h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 900;
+  letter-spacing: 4px;
+  background: linear-gradient(135deg, #FFD700, #FF6B35, #C84BFF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.page-header p {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .78rem;
+  color: var(--muted);
+}
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .72rem;
+  color: var(--blue);
+  text-decoration: none;
+  margin-bottom: 28px;
+  padding: 6px 14px;
+  border: 1px solid rgba(75,159,255,.3);
+  border-radius: 7px;
+  transition: all .2s;
+}
+.back-link:hover { background: rgba(75,159,255,.08); }
+
+/* NAV */
+.toc {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 24px;
+  margin-bottom: 40px;
+}
+.toc-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: .6rem;
+  letter-spacing: 3px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.toc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 6px;
+}
+.toc a {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .72rem;
+  color: var(--blue);
+  text-decoration: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  transition: background .15s;
+  display: block;
+}
+.toc a:hover { background: rgba(75,159,255,.08); }
+
+/* SECTIONS */
+.section {
+  margin-bottom: 48px;
+  scroll-margin-top: 20px;
+}
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--border);
+}
+.section-icon { font-size: 1.5rem; flex-shrink: 0; }
+.section-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: .88rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.section-sub {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .65rem;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+/* CARDS */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.card-header {
+  padding: 12px 18px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.card-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.card-tag {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .62rem;
+  color: var(--muted);
+  padding: 2px 7px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+}
+.card-body { padding: 16px 18px; }
+.card-body p {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: .9rem;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.card-body p strong { color: var(--text); font-weight: 700; }
+.card-body p:last-child { margin-bottom: 0; }
+
+/* FORMULA BLOCKS */
+.formula {
+  background: #0d0d14;
+  border: 1px solid rgba(200,75,255,.25);
+  border-left: 3px solid var(--purple);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 16px;
+  margin: 12px 0;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .78rem;
+  color: var(--gold);
+  line-height: 2;
+  overflow-x: auto;
+}
+.formula .comment {
+  color: var(--muted);
+  font-size: .68rem;
+}
+.formula .label {
+  color: var(--green);
+}
+.formula .range {
+  color: var(--blue);
+}
+
+/* TABLES */
+.formula-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .75rem;
+}
+.formula-table th {
+  background: var(--surface2);
+  color: var(--muted);
+  padding: 8px 12px;
+  text-align: left;
+  font-weight: 700;
+  letter-spacing: .1em;
+  font-size: .64rem;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+}
+.formula-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(30,32,48,.8);
+  color: var(--text);
+  vertical-align: top;
+}
+.formula-table td:first-child { color: var(--gold); }
+.formula-table tr:last-child td { border-bottom: none; }
+.formula-table tr:hover td { background: rgba(255,255,255,.02); }
+
+/* TIER TABLE */
+.tier-row-legendary td:first-child { color: #FFD700; }
+.tier-row-epic      td:first-child { color: #FF6B35; }
+.tier-row-ultra     td:first-child { color: #C84BFF; }
+.tier-row-very      td:first-child { color: #4B9FFF; }
+.tier-row-rare      td:first-child { color: #4BFF9F; }
+.tier-row-uncommon  td:first-child { color: #B0C4DE; }
+.tier-row-common    td:first-child { color: #888; }
+.tier-row-basic     td:first-child { color: #555; }
+
+/* NOTES */
+.note {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  background: rgba(245,200,66,.06);
+  border: 1px solid rgba(245,200,66,.2);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin: 10px 0;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: .85rem;
+  color: var(--muted);
+}
+.note strong { color: var(--gold); }
+.note-icon { flex-shrink: 0; }
+.note.blue {
+  background: rgba(75,159,255,.06);
+  border-color: rgba(75,159,255,.2);
+}
+.note.blue strong { color: var(--blue); }
+.note.green {
+  background: rgba(61,220,132,.06);
+  border-color: rgba(61,220,132,.2);
+}
+.note.green strong { color: var(--green); }
+
+/* CLAMP PILL */
+.clamp {
+  display: inline-block;
+  background: rgba(200,75,255,.12);
+  border: 1px solid rgba(200,75,255,.3);
+  border-radius: 4px;
+  padding: 1px 7px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .7rem;
+  color: var(--purple);
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 20px 0;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .65rem;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+  margin-top: 40px;
+}
+
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+@media (max-width: 600px) {
+  .page-header h1 { font-size: 1.2rem; letter-spacing: 2px; }
+  .formula { font-size: .68rem; }
+  .formula-table { font-size: .65rem; }
+  .toc-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <a class="back-link" href="index.html">← Back to the Tool</a>
+
+  <div class="page-header">
+    <h1>Formulas &amp; Calculations</h1>
+    <p>A full reference for every formula, filter, and calculation used in the BSS Values Tool</p>
+  </div>
+
+  <!-- TABLE OF CONTENTS -->
+  <div class="toc">
+    <div class="toc-title">Contents</div>
+    <div class="toc-grid">
+      <a href="#item-value">Item Value (getAvg)</a>
+      <a href="#tiers">Tier System</a>
+      <a href="#calculator">Trading Calculator</a>
+      <a href="#success">Trade Success %</a>
+      <a href="#demand-adj">Demand Adjustment</a>
+      <a href="#upgrader">Upgrader</a>
+      <a href="#wishlist">Wishlist</a>
+      <a href="#trasher">Trasher Score</a>
+      <a href="#portfolio">Portfolio Health</a>
+      <a href="#market">Market Overview</a>
+      <a href="#matcher">Trade Matcher</a>
+      <a href="#recommender">Recommender</a>
+      <a href="#sort-mode">Sort Mode Effects</a>
+    </div>
+  </div>
+
+  <!-- ITEM VALUE -->
+  <div class="section" id="item-value">
+    <div class="section-header">
+      <div class="section-icon">💰</div>
+      <div>
+        <div class="section-title" style="color:var(--gold)">Item Value</div>
+        <div class="section-sub">getAvg(item) — the foundation of every other calculation</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title" style="color:var(--gold)">getAvg</span>
+        <span class="card-tag">used everywhere</span>
+      </div>
+      <div class="card-body">
+        <p>Every value displayed and compared in the tool comes from this function. It prefers the site's own smoothed average, falling back to a midpoint if unavailable.</p>
+        <div class="formula">
+<span class="comment">// Priority 1 — use bssmvalues.com's smoothed graph value</span>
+<span class="label">if</span> cached_graph_value &gt; 0:
+  <span class="label">return</span> cached_graph_value
+
+<span class="comment">// Priority 2 — midpoint of min/max range</span>
+<span class="label">return</span> (value_min + value_max) / 2
+        </div>
+        <p>If both <code>value_min</code> and <code>value_max</code> are missing or non-numeric, the item is treated as unpriced and excluded from value-based calculations.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIERS -->
+  <div class="section" id="tiers">
+    <div class="section-header">
+      <div class="section-icon">🏷️</div>
+      <div>
+        <div class="section-title" style="color:var(--blue)">Tier System</div>
+        <div class="section-sub">getTier(avg) — community-defined value brackets</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <p>Tiers are community labels, not official game categories. The tool walks this table top-to-bottom and assigns the first tier whose range contains the item's avg value.</p>
+        <table class="formula-table">
+          <thead><tr><th>Tier</th><th>Min</th><th>Max</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr class="tier-row-legendary"><td>Legendary</td><td>100</td><td>∞</td><td>Top-tier, usually limited items</td></tr>
+            <tr class="tier-row-epic"><td>Epic</td><td>10</td><td>100</td><td>High-end tradeable items</td></tr>
+            <tr class="tier-row-ultra"><td>Ultra-Rare</td><td>3</td><td>10</td><td>Actively traded mid-tier</td></tr>
+            <tr class="tier-row-very"><td>Very Rare</td><td>1</td><td>3</td><td>Common target for upgrading</td></tr>
+            <tr class="tier-row-rare"><td>Rare</td><td>0.5</td><td>1</td><td>Standard entry point</td></tr>
+            <tr class="tier-row-uncommon"><td>Uncommon</td><td>0.1</td><td>0.5</td><td>Low-end, useful as adds</td></tr>
+            <tr class="tier-row-common"><td>Common</td><td>0.01</td><td>0.1</td><td>Filler / quest items</td></tr>
+            <tr class="tier-row-basic"><td>Basic</td><td>0</td><td>0.01</td><td>Near-zero value</td></tr>
+          </tbody>
+        </table>
+        <div class="note">
+          <span class="note-icon">⚠️</span>
+          <span>Tiers are a community convention, not a game mechanic. Items tend to trade within ±1 tier. Jumping 2+ tiers in a single trade is significantly harder regardless of value matching.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CALCULATOR -->
+  <div class="section" id="calculator">
+    <div class="section-header">
+      <div class="section-icon">🧮</div>
+      <div>
+        <div class="section-title" style="color:var(--green)">Trading Calculator</div>
+        <div class="section-sub">Verdict labels, trade type detection, and adds suggestions</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title" style="color:var(--green)">Verdict Thresholds</span>
+      </div>
+      <div class="card-body">
+        <div class="formula">
+diff = yourTotal − theirTotal
+pct  = |diff| / theirTotal × 100
+
+pct ≤ 5%              → <span class="label">Fair Trade ✓</span>
+pct ≤ 15% AND diff &lt; 0 → <span class="label">Close — LB</span>  (suggests adds)
+diff &gt; 0               → <span class="label">OP</span>  (you overpaid)
+diff &lt; 0               → <span class="label">LB</span>  (you underpaid)
+        </div>
+        <p>Both the raw value difference and the percentage are shown simultaneously. For example: <strong>OP +3.50 (+18.2%)</strong>.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title" style="color:var(--green)">Trade Type Detection</span>
+        <span class="card-tag">UP / DG</span>
+      </div>
+      <div class="card-body">
+        <div class="formula">
+yourItems &gt; 1 AND theirItems = 1  → <span class="label">⬆ UP (Upgrading)</span>
+yourItems = 1 AND theirItems &gt; 1  → <span class="label">⬇ DG (Downgrading)</span>
+both sides &gt; 1                    → <span class="label">↔ Multi-item trade</span>
+        </div>
+        <div class="note blue">
+          <span class="note-icon">💡</span>
+          <span>In an UP trade expect to OP slightly. In a DG trade require OP from them. This is a community convention, not enforced by the tool.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title" style="color:var(--green)">Adds Suggestion</span>
+      </div>
+      <div class="card-body">
+        <p>When you're LB by ≤15%, the tool finds items from the full catalogue that could close the gap:</p>
+        <div class="formula">
+gap = |diff|
+candidates = items where avg ≤ gap × 1.2
+sorted by: |item.avg − gap| ascending
+show top: 4 results
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRADE SUCCESS -->
+  <div class="section" id="success">
+    <div class="section-header">
+      <div class="section-icon">🎯</div>
+      <div>
+        <div class="section-title" style="color:var(--purple)">Trade Success %</div>
+        <div class="section-sub">calcTradeSuccess(combo, targetValue) — core probability estimate</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <p>Estimates the likelihood a trade offer gets accepted in the BSS trading hub. Output is always between <span class="clamp">5</span> and <span class="clamp">95</span> — a trade can never be guaranteed or impossible.</p>
+
+        <div class="formula">
+n          = number of items you're offering
+total      = sum of avg values of your items
+base       = <span class="range">60</span>  <span class="comment">// ~60% baseline acceptance rate in the hub</span>
+
+<span class="comment">// Factor 1: Value closeness (0–60 pts)</span>
+valueDiff  = |total − targetValue| / targetValue
+valueScore = max(0,  1 − valueDiff × 2.5) × <span class="range">60</span>
+
+<span class="comment">// Factor 2: Overpay bonus (0–+15 pts)</span>
+opRatio    = (total − targetValue) / targetValue
+opBonus    = if OPing: min(15,  opRatio × 40)
+
+<span class="comment">// Factor 3: Item count penalty (–5 per extra item)</span>
+countPenalty = (n − 1) × <span class="range">5</span>
+
+<span class="comment">// Factor 4: Tier distance penalty (–8 per tier jumped)</span>
+avgComboTier  = average tier index of your items
+targetTierIdx = tier index of target item (0=Legendary … 7=Basic)
+tierDistance  = max(0,  targetTierIdx − avgComboTier)
+tierPenalty   = tierDistance × <span class="range">8</span>
+
+<span class="comment">// Final score</span>
+raw    = base + valueScore + opBonus − countPenalty − tierPenalty
+result = <span class="label">clamp</span>(round(raw), <span class="range">5</span>, <span class="range">95</span>)
+        </div>
+
+        <table class="formula-table">
+          <thead><tr><th>Factor</th><th>Max contribution</th><th>Direction</th></tr></thead>
+          <tbody>
+            <tr><td>Base rate</td><td>60 pts</td><td>Always added</td></tr>
+            <tr><td>Value closeness</td><td>+60 pts</td><td>Reduces as values diverge</td></tr>
+            <tr><td>Overpay bonus</td><td>+15 pts</td><td>Scales with how much you OP</td></tr>
+            <tr><td>Item count</td><td>−5 per extra item</td><td>1 item = 0 penalty, 4 items = −15</td></tr>
+            <tr><td>Tier distance</td><td>−8 per tier jumped</td><td>Same tier = 0, 3 tiers = −24</td></tr>
+          </tbody>
+        </table>
+        <div class="note">
+          <span class="note-icon">⚠️</span>
+          <span>This is an <strong>estimate</strong> based on BSS trading conventions, not a real probability derived from actual trade data. Use it as a guide, not a guarantee.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEMAND ADJUSTMENT -->
+  <div class="section" id="demand-adj">
+    <div class="section-header">
+      <div class="section-icon">📊</div>
+      <div>
+        <div class="section-title" style="color:#ffb347">Demand Adjustment</div>
+        <div class="section-sub">calcTradeSuccessAdj — applied on top of base success when Sort Mode is not Value</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <p>Takes the base success % and adjusts it based on demand levels of what you're giving vs what you're asking for.</p>
+        <table class="formula-table">
+          <thead><tr><th>Sort Mode</th><th>Formula</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>💰 Value</td>
+              <td>No adjustment — base score returned unchanged</td>
+            </tr>
+            <tr>
+              <td>⚖️ Both</td>
+              <td>
+                base<br>
+                − (targetDemand / 5) × 15 &nbsp;<span style="color:var(--muted)">(up to −15 for high-demand target)</span><br>
+                + (avgYourDemand / 5) × 12 &nbsp;<span style="color:var(--muted)">(up to +12 for high-demand offer)</span>
+              </td>
+            </tr>
+            <tr>
+              <td>📊 Demand</td>
+              <td>
+                50 + (avgYourDemand − targetDemand) × 12<br>
+                <span style="color:var(--muted)">(value math thrown out — only demand gap matters)</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="note blue">
+          <span class="note-icon">💡</span>
+          <span><strong>Why this matters:</strong> Offering high-demand items means the other person wants what you're giving — they're more likely to accept. Asking for high-demand items means you're competing with many other people LFing the same thing — harder to acquire.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- UPGRADER -->
+  <div class="section" id="upgrader">
+    <div class="section-header">
+      <div class="section-icon">📈</div>
+      <div>
+        <div class="section-title" style="color:var(--green)">Upgrader</div>
+        <div class="section-sub">Target pool filtering, combo generation, and sorting</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title" style="color:var(--green)">Target Pool Filter</span></div>
+      <div class="card-body">
+        <p>Items from the full catalogue are shown as upgrade targets only if their value is within ±10% of your combo's total value:</p>
+        <div class="formula">
+comboTotal × 0.90  ≤  target.avg  ≤  comboTotal × 1.10
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title" style="color:var(--green)">Combo Generation</span><span class="card-tag">allSubsets()</span></div>
+      <div class="card-body">
+        <p>Every possible non-empty combination of your items is generated using bit masking:</p>
+        <div class="formula">
+<span class="comment">// For each number from 1 to 2ⁿ − 1:</span>
+<span class="comment">// treat it as a bitmask where each bit = one item</span>
+for mask = 1 to (2^n − 1):
+  include item[i] if bit[i] of mask is set
+
+max items: <span class="range">8</span>  (2⁸ − 1 = <span class="range">255</span> combos)
+        </div>
+        <p>Capped at 8 items to prevent browser lag. Combos that produce the same target are deduplicated, keeping only the highest success % per target.</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title" style="color:var(--green)">Sorting Logic</span></div>
+      <div class="card-body">
+        <table class="formula-table">
+          <thead><tr><th>Sort Mode</th><th>Order</th></tr></thead>
+          <tbody>
+            <tr><td>🎯 Best Chance</td><td>success % descending</td></tr>
+            <tr><td>💲 Best Value</td><td>target.avg descending</td></tr>
+            <tr><td>🎲 Custom %</td><td>|success − yourTarget| ascending</td></tr>
+            <tr><td>📊 Demand mode override</td><td>Re-sort by target.demand descending after above</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- WISHLIST -->
+  <div class="section" id="wishlist">
+    <div class="section-header">
+      <div class="section-icon">✨</div>
+      <div>
+        <div class="section-title" style="color:var(--gold)">Wishlist</div>
+        <div class="section-sub">Coverage bar, gap value, and trade path matching</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title" style="color:var(--gold)">Coverage Bar</span></div>
+      <div class="card-body">
+        <div class="formula">
+targetTotal = sum of avg values of all wanted items
+pct         = min(1,  myTotal / targetTotal)
+
+<span class="comment">// Colour thresholds</span>
+pct ≥ 0.90  → <span class="label">green</span>  (can afford)
+pct ≥ 0.60  → <span class="label">amber</span>  (getting close)
+pct &lt; 0.60  → <span class="label">red</span>    (significantly short)
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title" style="color:var(--gold)">Gap Value</span></div>
+      <div class="card-body">
+        <p>This determines what value the tool searches for in singles and pairs — either the full target or just the remaining gap:</p>
+        <div class="formula">
+<span class="label">if</span> you have items AND you're short of target:
+  gapVal = targetTotal − myTotal  <span class="comment">// find what you still need</span>
+<span class="label">else</span>:
+  gapVal = targetTotal            <span class="comment">// find something for the full target</span>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title" style="color:var(--gold)">Match Windows</span></div>
+      <div class="card-body">
+        <table class="formula-table">
+          <thead><tr><th>Match type</th><th>Filter</th><th>Sort (Value mode)</th><th>Sort (Demand mode)</th></tr></thead>
+          <tbody>
+            <tr><td>Singles</td><td>|item.avg − gapVal| / gapVal ≤ 30%</td><td>Closest to gapVal</td><td>demand descending</td></tr>
+            <tr><td>Pairs</td><td>|A+B − gapVal| / gapVal ≤ 25%</td><td>Closest sum</td><td>avg demand of pair</td></tr>
+            <tr><td>Best Offers</td><td>|comboTotal − targetTotal| / targetTotal ≤ 15%</td><td>success % descending</td><td>demand adjusted</td></tr>
+          </tbody>
+        </table>
+        <p>Best Offers only appear when your have-items contain subsets that actually cover the full target within 15%.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRASHER -->
+  <div class="section" id="trasher">
+    <div class="section-header">
+      <div class="section-icon">🗑️</div>
+      <div>
+        <div class="section-title" style="color:var(--orange)">Trasher Score</div>
+        <div class="section-sub">calcTrashScore(item, invAvg) — 0 to 100, higher = more trashable</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <p><strong>invAvg</strong> = average value of all items in your drop zone that have a numeric value (unpriced items are excluded from this average).</p>
+        <table class="formula-table">
+          <thead><tr><th>Sort Mode</th><th>Formula</th><th>What it measures</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>💰 Value</td>
+              <td>round(min(100, max(0, (1 − avg/invAvg) × 70 + 30)))</td>
+              <td>How far below your inventory average the item is</td>
+            </tr>
+            <tr>
+              <td>📊 Demand</td>
+              <td>round((1 − demand/5) × 100)</td>
+              <td>How rarely this item is traded or requested in the hub</td>
+            </tr>
+            <tr>
+              <td>⚖️ Both</td>
+              <td>round((1 − demand/5) × 60 + min(40, (1 − avg/invAvg) × 40))</td>
+              <td>60% demand + 40% value blend</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="formula">
+<span class="comment">// Score interpretation</span>
+score ≥ 61  → <span class="label">TRASH</span>   (red)
+score ≥ 31  → <span class="label">MAYBE</span>   (amber)
+score &lt; 31  → <span class="label">KEEP</span>    (green)
+        </div>
+        <div class="note">
+          <span class="note-icon">⚠️</span>
+          <span><strong>Limited / seasonal items are never recommended for trash</strong> — the Recommender protects these regardless of their score.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PORTFOLIO HEALTH -->
+  <div class="section" id="portfolio">
+    <div class="section-header">
+      <div class="section-icon">💎</div>
+      <div>
+        <div class="section-title" style="color:var(--blue)">Portfolio Health</div>
+        <div class="section-sub">calcPortfolioHealth() — 0 to 100 overall score, shown in Recommender</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <p>Four factors, each scored 0–100, then averaged into a single overall score.</p>
+        <table class="formula-table">
+          <thead><tr><th>Factor</th><th>Formula</th><th>What it measures</th></tr></thead>
+          <tbody>
+            <tr>
+              <td style="color:var(--blue)">Avg Demand</td>
+              <td>(weightedAvgDemand / 5) × 100</td>
+              <td>How tradeable your inventory is on average</td>
+            </tr>
+            <tr>
+              <td style="color:var(--purple)">Diversity</td>
+              <td>min(1, uniqueTierCount / 5) × 100</td>
+              <td>How many different value tiers are represented</td>
+            </tr>
+            <tr>
+              <td style="color:var(--green)">Liquidity</td>
+              <td>max(0, 1 − spread) × 100<br><span style="color:var(--muted);font-size:.65rem">spread = weighted mean absolute deviation / total value</span></td>
+              <td>How close your items are to each other in value (tightly clustered = liquid)</td>
+            </tr>
+            <tr>
+              <td style="color:var(--gold)">Value Density</td>
+              <td>min(1, avgValuePerItem / 10) × 100</td>
+              <td>Average value per item (caps at avg 10)</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="formula">
+overall = round((demandScore + divScore + liqScore + densityScore) / 4)
+
+overall ≥ 70  → <span class="label">Healthy</span>
+overall ≥ 45  → <span class="label">Fair</span>
+overall &lt; 45  → <span class="label">Needs Work</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MARKET OVERVIEW -->
+  <div class="section" id="market">
+    <div class="section-header">
+      <div class="section-icon">📊</div>
+      <div>
+        <div class="section-title" style="color:#ffb347">Market Overview</div>
+        <div class="section-sub">Price change detection between refreshes</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <p>Before every data refresh, current values are snapshotted. After the refresh, each item is compared to its snapshot to detect significant changes.</p>
+        <div class="formula">
+<span class="comment">// An item appears as a gainer or loser only if:</span>
+|current − previous| / previous  ≥  <span class="range">0.5%</span>
+
+<span class="comment">// The same threshold triggers the flash animation on item cards</span>
+        </div>
+        <p>Items below this threshold are considered noise and not shown as movers. In Value mode only demand ≥3 items appear in the Most Demanded strip; in Demand mode all items are shown.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRADE MATCHER -->
+  <div class="section" id="matcher">
+    <div class="section-header">
+      <div class="section-icon">🔄</div>
+      <div>
+        <div class="section-title" style="color:var(--purple)">Trade Matcher</div>
+        <div class="section-sub">Direct paths and 2-step chains</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <table class="formula-table">
+          <thead><tr><th>Path type</th><th>Filter</th><th>Combined success</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Direct</td>
+              <td>|comboTotal − targetValue| / targetValue ≤ 15%</td>
+              <td>calcTradeSuccessAdj(combo, target)</td>
+            </tr>
+            <tr>
+              <td>2-step chain</td>
+              <td>
+                Step 1: combo within ±15% of intermediate<br>
+                Step 2: intermediate within ±30% of target
+              </td>
+              <td>round(step1% × step2% / 100)</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>The 2-step search checks the top 30 items by value (below target value) as potential intermediates. Results sorted by combined success % descending.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RECOMMENDER -->
+  <div class="section" id="recommender">
+    <div class="section-header">
+      <div class="section-icon">🤖</div>
+      <div>
+        <div class="section-title" style="color:var(--green)">Recommender</div>
+        <div class="section-sub">Rule-based per-item recommendations across three modes</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <p>No numeric formula — applies conditional rules to each item in your inventory. <strong>Limited items</strong> (marked <code>_static</code>, or avg ≥50 + demand ≥3) are protected from trash/trade-away recommendations in all modes.</p>
+        <table class="formula-table">
+          <thead><tr><th>Mode</th><th>Rule</th><th>Action shown</th></tr></thead>
+          <tbody>
+            <tr><td rowspan="3">📈 Gain Value</td><td>trashScore ≥ 65 AND demand ≤ 2 AND not limited</td><td>Trade away (UP)</td></tr>
+            <tr><td>demand ≥ 4 AND avg ≥ invAvg → find target at 1.2–3× value with demand ≥ yours</td><td>Upgrade (UP)</td></tr>
+            <tr><td>avg &lt; 0.1 AND demand ≤ 1 AND not limited</td><td>Use as adds / Discard</td></tr>
+            <tr><td rowspan="2">📊 High Demand</td><td>demand ≥ 4</td><td>Keep & trade strategically</td></tr>
+            <tr><td>demand ≤ 1 AND not limited</td><td>Swap for higher-demand item</td></tr>
+            <tr><td rowspan="3">💎 What to Hold</td><td>is limited</td><td>Hold — do not trash</td></tr>
+            <tr><td>demand ≥ 3 AND avg ≥ invAvg</td><td>Hold</td></tr>
+            <tr><td>demand ≤ 1 AND avg ≤ invAvg × 0.5 AND not limited</td><td>Trade away</td></tr>
+          </tbody>
+        </table>
+        <div class="note green">
+          <span class="note-icon">💡</span>
+          <span>The Recommender mode auto-syncs with the global Sort Mode — switching to 📊 Demand automatically activates High Demand mode, switching to 💰 Value switches back to Gain Value.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SORT MODE EFFECTS -->
+  <div class="section" id="sort-mode">
+    <div class="section-header">
+      <div class="section-icon">⚖️</div>
+      <div>
+        <div class="section-title" style="color:var(--muted)">Sort Mode Effects</div>
+        <div class="section-sub">How 💰 Value / ⚖️ Both / 📊 Demand changes each section</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <table class="formula-table">
+          <thead><tr><th>Section</th><th>💰 Value</th><th>⚖️ Both</th><th>📊 Demand</th></tr></thead>
+          <tbody>
+            <tr><td>Browse / Browsers</td><td>Sort by avg value</td><td>Sort by avg value</td><td>Sort by demand desc</td></tr>
+            <tr><td>Tier headers</td><td>Value range</td><td>Value range</td><td>Avg demand/5</td></tr>
+            <tr><td>Success %</td><td>Value only</td><td>Value + demand adj.</td><td>Demand gap only</td></tr>
+            <tr><td>Upgrader results</td><td>By sort mode</td><td>Demand adjusted %</td><td>Re-sort by target demand</td></tr>
+            <tr><td>Wishlist singles</td><td>Closest to gap</td><td>Closest to gap</td><td>demand desc</td></tr>
+            <tr><td>Trasher score</td><td>100% value</td><td>60% demand + 40% value</td><td>100% demand</td></tr>
+            <tr><td>Catalogue</td><td>By trash score</td><td>By trash score</td><td>By demand desc</td></tr>
+            <tr><td>Market demanded</td><td>Only demand ≥3</td><td>All items</td><td>All items</td></tr>
+            <tr><td>Recommender mode</td><td>Auto → Gain Value</td><td>No change</td><td>Auto → High Demand</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    BSS Values Tool · github.io · formulas last updated March 2026
+  </footer>
+
+</div>
+</body>
+</html>
