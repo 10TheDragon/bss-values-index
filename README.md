@@ -27,7 +27,7 @@ A live trading tool for Bee Swarm Simulator built on bssmvalues.com data.
 
 ## How to use
 
-Visit the link above — no install needed. Works in any browser.
+Visit the link above - no install needed. Works in any browser.
 Set your inventory using the Inventory button in the toolbar to get personalised recommendations.
 
 ## Data source
