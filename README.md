@@ -12,7 +12,7 @@ A live trading tool for Bee Swarm Simulator built on bssmvalues.com data.
 
 - [Open the Tool](https://10thedragon.github.io/bss-values-index/)
 - [Formulas & Calculations](https://10thedragon.github.io/bss-values-index/formulas.html)
-- [Wiki — Full Formula Reference](https://github.com/10TheDragon/bss-values-index/wiki)
+- [Wiki - Full Formula Reference](https://github.com/10TheDragon/bss-values-index/wiki)
 
 ## Features
 
