@@ -1,5 +1,5 @@
 # bss-values-index
-vibe coded (mess) that contains various tools for bss (bee swarm simulator) trading - uses bssmvalues.com api data
+(mess) that contains various tools for bss (bee swarm simulator) trading - uses bssmvalues.com api data
 - demand calculations in the tool are not very accurate, but a rough estimate
 - anything not using demand, like the caluclator, should work flawlessly
 - i will likely not be making any more updates to this tool unless some better trading data releases, in the meantime feel free to fuck around with this and/or fork
